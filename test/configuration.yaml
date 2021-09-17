@@ -1,0 +1,3 @@
+handlers:
+  origin:
+    request: "test/handlers/origin/request.js"

@@ -1,4 +1,5 @@
-import getStatus from "statuses"
+import HTTP from "http"
+import * as _ from "@dashkite/joy"
 
 fromBase64 = (text) ->
   Buffer.from text, "base64"
@@ -9,19 +10,19 @@ toBase64 = (text) ->
     .toString "base64"
 
 fromEventHeaders = (headers) ->
-  headers = {}
-  for key, values of request.headers
+  result = {}
+  for key, values of headers
     if values.length > 1
-      headers[key] = (value for {value} in values)
+      result[key] = (value for {value} in values)
     else
-      headers[key] = values[0]
-  headers
+      result[key] = values[0]
+  result
 
-toEventHeaers = (headers) ->
-  headers = {}
-  for key, value in request.headers
-    (headers[key] ?= []).push { key, value }
-  headers
+toEventHeaders = (headers) ->
+  result = {}
+  for key, value of headers
+    (result[key] ?= []).push { key, value }
+  result
 
 Event =
 
@@ -51,29 +52,36 @@ Event.Request =
 
   from: _.generic
     name: "Event.Request"
-    description: "Convert an event or normalized request to AWS event request"
+    description: "Convert an event or normalized request to an AWS event request"
     default: (request) ->
+      # normalize
+      request = Request.from request
       # sighs in HTTP ...
       [ path, search ] = _.split "?", request.uri
-  
+
       uri: path
-      method: request.method
+      method: _.toUpperCase request.method
       headers: toEventHeaders request.headers
       querystring: search
       body: if request.content?
         inputTruncated: false
         action: "read-only"
         encoding: "base64"
-        body: toBase64 JSON.stringify content
+        data: toBase64 JSON.stringify request.content
         
-_.generic Event.Request.from, Event.isType, (event) -> event.Records[0].request
+_.generic Event.Request.from, Event.isType, (event) -> event.Records[0].cf.request
 
 Event.Response =
 
-  from: (response) ->
-    status: response.status
-    statusDescription: getStatus response.status
-    headers: toEventHeaders response.headers
+  from: _.generic
+    name: "Event.Response.from"
+    description: "Convert an event or normalized response to an AWS event response"
+    default: (response) ->
+      # normalize
+      response = Response.from response
+      status: response.status.toString()
+      statusDescription: HTTP.STATUS_CODES[ response.status ]
+      headers: toEventHeaders response.headers
 
 _.generic Event.Response.from, Event.isType, (event) -> event.Records[0].response
 
@@ -84,7 +92,7 @@ Request =
     description: "Normalize an event request or partial request description"
     default: ({ uri, method, headers, content }) ->
       uri: uri
-      method: method ? "get"
+      method: _.toLowerCase method ? "get"
       headers: headers ? {}
       content: content
 
@@ -96,7 +104,7 @@ _.generic Request.from, Event.isType, (event) ->
     uri: if request.querystring? && request.querystring != ""
           "#{request.uri}?#{request.querystring}"
         else request.uri
-    method: request.method
+    method: _.toLowerCase request.method
     headers: fromEventHeaders request.headers
     content: JSON.parse fromBase64 request.data
 

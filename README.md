@@ -79,6 +79,10 @@ Given an event, returns the corresponding event response.
 
 Creates a normalized request object given a description.
 
+`from event → normalized-request`
+
+Given an event, returns a normalized request.
+
 ## Response
 
 ### from
@@ -87,3 +91,6 @@ Creates a normalized request object given a description.
 
 Creates a normalized response object given a description.
 
+`from event → normalized-response`
+
+Given an event, returns a normalized response.

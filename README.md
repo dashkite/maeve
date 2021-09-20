@@ -1,6 +1,6 @@
 # Maeve
 
-_For implementing and testing Edge Lambdas_
+_Implement and test Lambda functions more easily._
 
 # Reference
 

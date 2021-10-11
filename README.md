@@ -2,6 +2,11 @@
 
 _Implement and test Lambda functions more easily._
 
+> The simulation is elegant, but it's flawed because it was built by your kind. And if there's one thing I know about human nature, it's that your stupidity is only eclipsed by your laziness. Whoever programmed this world cut a few corners, applied the same code inside the simulation as they used to build the simulation itself.
+>
+> Maeve, _WestWorld_
+
+
 # Reference
 
 ## Event

@@ -50,13 +50,13 @@ Event.Request =
 _.generic Event.Request.from, _.isObject, (request) ->
     # normalize
     request = Request.from request
-    # sighs in HTTP ...
-    [ path, search ] = _.split "?", request.uri
+    headers = toEventHeaders request.headers
+    headers.host = [ key: "host", value: request.host ]
     clientIp: request.clientIp ? "127.0.0.1"
-    uri: path
+    uri: request.path # sighs in HTTP
+    querystring: request.query
     method: _.toUpperCase request.method
-    headers: toEventHeaders request.headers
-    querystring: search
+    headers: headers
     body: if request.content?
       inputTruncated: false
       action: "read-only"
@@ -119,14 +119,19 @@ _.generic Event.Response.from, Event.isType, _.isObject,
     Event.Response.from response
 
 Request =
-  isType: (value) -> value? && value.uri? && value.method? && value.headers?
+  isType: (value) -> value? && value.target? && value.method? && value.headers?
   from: _.generic
     name: "Request.from"
     description: "Normalize an event request or partial request description"
 
 _.generic Request.from, _.isObject, 
-  ({ uri, method, headers, content, origin }) ->
-      uri: uri
+  ({ url, method, headers, content, origin }) ->
+      { pathname, search, hostname } = new URL url
+      url: url
+      target: "#{pathname}#{search}"
+      path: pathname
+      query: search
+      host: hostname
       method: _.toLowerCase method ? "get"
       headers: headers ? {}
       content: content
@@ -143,19 +148,24 @@ _.generic Request.from, _.isObject,
 
 _.generic Request.from, (_.isType HTTP.IncomingMessage), (request) ->
   Request.from
-    uri: request.url
+    url: request.url
     method: request.method
     headers: request.headers
     content: if ( _.parseNumber request.headers["content-length"] ) > 0
       await read request
 
 _.generic Request.from, Event.Request.isType, (request) ->
-    # sighs in HTTP ...
-    uri: if request.querystring? && request.querystring != ""
-          "#{request.uri}?#{request.querystring}"
-        else request.uri
+    target = if request.querystring? && request.querystring != ""
+      "#{request.uri}?#{request.querystring}"
+    else
+      request.uri
+    headers = fromEventHeaders request.headers
+    url: "#{headers.host}#{target}"
+    target: target
+    path: request.uri # sighs in HTTP
+    query: request.queryString
     method: _.toLowerCase request.method
-    headers: fromEventHeaders request.headers
+    headers: headers
     content: if request.body?.data? then JSON.parse fromBase64 request.body.data
     origin: request.origin
 
@@ -183,6 +193,7 @@ _.generic Response.from, Event.Response.isType, (response) ->
       switch response.bodyEncoding
         when "base64" then fromBase64 response.body
         else response.body
+    encoding: response.bodyEncoding
 
 _.generic Response.from, Event.isType, (event) ->
     { response } = event.Records[0].cf

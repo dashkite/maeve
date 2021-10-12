@@ -14,7 +14,7 @@ do ->
 
         event = $.Event.from
           request:
-            uri: "/"
+            url: "https://example.org/"
             method: "get"
             headers: {}
         
@@ -30,7 +30,7 @@ do ->
 
         event = $.Event.from
           request:
-            uri: "/"
+            url: "https://example.org/"
             method: "get"
             headers: {}
 
@@ -46,7 +46,7 @@ do ->
           test "normalized request", ->
 
             request = $.Event.Request.from
-              uri: "/"
+              url: "https://example.org/"
               method: "get"
               headers:
                 "content-type": "application/json"
@@ -64,14 +64,13 @@ do ->
 
             event = $.Event.from
               request:
-                uri: "/"
+                url: "https://example.org/"
                 method: "get"
                 headers: {}
             
             request = $.Event.Request.from event
 
             assert.equal "/", request.uri
-
 
         ]
 

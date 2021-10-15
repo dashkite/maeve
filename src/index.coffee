@@ -1,2 +1,4 @@
-export * from "./event"
-export * from "./lambda"
+import * as Sublime from "./sublime"
+import * as Lambda from "./lambda"
+
+export { Sublime, Lambda }

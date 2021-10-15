@@ -3,126 +3,38 @@ import print from "@dashkite/amen-console"
 import assert from "@dashkite/assert"
 import * as _ from "@dashkite/joy"
 import * as $ from "../src"
+import "@dashkite/maeve/conversions/fetch"
+import "@dashkite/maeve/conversions/lambda"
+import "@dashkite/maeve/conversions/node"
+import "@dashkite/maeve/lambda/emulator"
+
 
 do ->
 
   print await test "Maeve", [
 
-    test "Event", [
-
-      test "from", ->
-
-        event = $.Event.from
-          request:
-            url: "https://example.org/"
-            method: "get"
-            headers: {}
-        
-        assert $.Event.isType event
-        assert event.Records[0].cf.request?
-        assert.equal "/", event.Records[0].cf.request.uri
-        assert.equal "GET", event.Records[0].cf.request.method
-
-      test "dispatch", ->
-
-        handler = (event, context, callback) ->
-          callback null, $.Event.Request.from event
-
-        event = $.Event.from
-          request:
-            url: "https://example.org/"
-            method: "get"
-            headers: {}
-
-        result = $.Event.dispatch event, handler
-        assert _.isPromise result
-        request = await result
-        assert request.uri?
-
-      test "Request", [
-
-        test "from", [
-
-          test "normalized request", ->
-
-            request = $.Event.Request.from
-              url: "https://example.org/"
-              method: "get"
-              headers:
-                "content-type": "application/json"
-              content: foo: "bar"
-            
-            assert.equal "/", request.uri
-            assert.equal "GET", request.method
-            assert request.headers["content-type"]?[0]?.value?
-            assert.equal "application/json",
-              request.headers["content-type"]?[0]?.value
-            assert.equal "base64", request.body.encoding
-            assert request.body.data?
-
-          test "event", ->
-
-            event = $.Event.from
-              request:
-                url: "https://example.org/"
-                method: "get"
-                headers: {}
-            
-            request = $.Event.Request.from event
-
-            assert.equal "/", request.uri
-
-        ]
-
-      ]
-
-      test "Response", [
-
-        test "from", [
-
-          test "normalized response", ->
-
-            response = $.Event.Response.from
-              status: "200"
-              headers:
-                "content-type": "application/json"
-            
-            assert.equal "200", response.status
-            assert.equal "OK", response.statusDescription
-            assert response.headers["content-type"]?[0]?.value?
-            assert.equal "application/json",
-              response.headers["content-type"]?[0]?.value
-
-          test "event"
-
-        ]
-
-      ]
-
+    test "Lambda", [
 
     ]
 
-    test "Request", [
-
-        test "from", [
-
-          test "description"
-
-          test "event"
-        
-        ]
-   
+    test "Sublime", [
+  
     ]
 
-    test "Response", [
+    test "Conversions", [
 
-        test "from", [
+      test "From Lambda Event to Sublime Request"
 
-          test "description"
+      test "Update Lambda Event Request from Sublime Request"
 
-          test "event"
-        
-        ]
+      test "Update Lambda Event Response from Sublime Response"
+
+      test "Create Lambda Event from a Node server request context"
+
+      test "Send Node response based on Event"
+
+      test "Issue Fetch request from a Lambda Event"
+
     ]
 
   ]

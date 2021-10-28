@@ -1,48 +1,18 @@
 import * as Type from "@dashkite/joy/type"
 import { Generic } from "#helpers"
-import * as Lambda from "../lambda"
+import * as Sublime from "../sublime"
 
 isNodeServerRequstContext = (value) ->
+
 isNodeServerResponse = (value) ->
 
-Generic.define Lambda.Event.from,
-  [
-    isNodeServerRequstContext
-  ]
-  ({server, request}) ->
-    event = new Lambda.Event
-    event._ = Records: [
-      cf:
-        # TODO do we need to mock config?
-        config: {}
-        request: do ->
-          scheme = "http"
-          port = server.address().port
-          host = "localhost"
-          headers = Lambda.Event.Headers.from request.headers
-          headers.host = [ key: "host", value: host ]
-          url = new URL request.url, "#{scheme}://#{host}:#{port}"
+Sublime.Response.send = Generic.create "Sublime.Response.send"
 
-          clientIp: "127.0.0.1"
-          uri: url.pathname
-          querystring: url.search[1..]
-          method: Text.toUpperCase request.method
-          headers: headers
-          origin:
-            custom:
-              customHeaders: {}
-              domainName: request.host,
-              keepaliveTimeout: 60,
-              path: request.target,
-              port: request.port
-              protocol: request.scheme
-              readTimeout: 60,
-              sslProtocols: []
-          ]
+Sublime.Response::send = -> Sublime.Response.send @, arguments...
 
-Generic.define Lambda.Event.to,
+Generic.define Sublime.Response.send,
   [
-    Type.isType Lambda.Event
+    Type.isType Sublime.Response
     isNodeServerResponse
   ]
   (event, response) ->

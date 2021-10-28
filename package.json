@@ -8,16 +8,21 @@
       "browser": "./build/browser/src/index.js",
       "node": "./build/node/src/index.js"
     },
-    "./lambda/emulator": {
+    "./lambda/*": {
+      "browser": "./build/browser/src/lambda/*.js",
+      "node": "./build/node/src/lambda/*.js"
+    },
+    "./node": {
+      "browser": "./build/browser/src/node/index.js",
+      "node": "./build/node/src/node/index.js"
+    },
+    "./emulator": {
       "browser": "./build/browser/src/lambda/emulator.js",
       "node": "./build/node/src/lambda/emulator.js"
-    },
-    "./conversions/*": {
-      "browser": "./build/browser/src/conversions/*.js",
-      "node": "./build/node/src/conversions/*.js"
     }
   },
   "imports": {
+    "#sublime": "./build/node/src/sublime/index.js",
     "#helpers": "./build/node/src/helpers/index.js"
   },
   "directories": {
@@ -37,7 +42,10 @@
   },
   "homepage": "https://github.com/dashkite/maeve#readme",
   "dependencies": {
-    "@dashkite/joy": "^0.3.11"
+    "@dashkite/base64": "^1.0.1",
+    "@dashkite/joy": "^0.3.11",
+    "@dashkite/utf8": "^1.0.1",
+    "http-status-codes": "^2.1.4"
   },
   "devDependencies": {
     "@dashkite/amen": "^0.1.2",

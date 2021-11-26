@@ -21,7 +21,7 @@ getRequestURL = (request) ->
     # domain = request.origin.custom.domainName
     # port = request.origin.custom.port
     host = getRequestHeader request, "host"
-    target = request.uri
+    target = getRequestTarget request
     # if port == ""
     #   url = "#{scheme}://#{domain}#{target}"
     # else
@@ -29,7 +29,11 @@ getRequestURL = (request) ->
     url = "#{scheme}://#{host}#{target}"
     ( new URL url ).href
 
-getRequestTarget = (request) -> request.uri
+getRequestTarget = (request) ->
+  if request.querystring == ""
+    request.uri
+  else
+    "#{request.uri}?#{request.querystring}"
 
 getRequestMethod = (request) ->
   Text.toLowerCase request.method

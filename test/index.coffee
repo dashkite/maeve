@@ -39,7 +39,7 @@ do ->
       test "getRequest", ->
         request = Edge.getRequest edgeRequestEvent
         assert.equal "GET", request.method
-        assert.equal "/", request.uri
+        assert.equal "/lambda", request.uri
       
       test "getResponse", ->
         request = Edge.getResponse edgeResponseEvent
@@ -47,8 +47,13 @@ do ->
       
       test "getRequestURL", ->
         request = Edge.getRequest edgeRequestEvent
-        assert.equal "https://account-development.dashkite.io/",
+        assert.equal "https://account-development.dashkite.io/lambda?query=12345",
           Edge.getRequestURL request
+
+      test "getRequestTarget", ->
+        request = Edge.getRequest edgeRequestEvent
+        assert.equal "/lambda?query=12345",
+          Edge.getRequestTarget request
 
       test "getRequestMethod", ->
         request = Edge.getRequest edgeRequestEvent

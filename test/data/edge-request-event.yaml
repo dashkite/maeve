@@ -40,5 +40,5 @@ Records:
               - TLSv1
               - TLSv1.1
               - TLSv1.2
-        querystring: ''
-        uri: /
+        querystring: 'query=12345'
+        uri: /lambda

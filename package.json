@@ -1,6 +1,6 @@
 {
   "name": "@dashkite/maeve",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Implement and test Lambdas more easily",
   "main": "build/node/src/index.js",
   "exports": {

@@ -2,18 +2,25 @@ import * as Fn from "@dashkite/joy/function"
 import * as Type from "@dashkite/joy/type"
 import * as Value from "@dashkite/joy/value"
 import * as Text from "@dashkite/joy/text"
+import { convert } from "@dashkite/bake"
+
+import {
+  getStatusFromDescription
+  getDescriptionFromStatus
+  setResponseBody
+} from "./common"
 
 getRequest = (event) -> Value.clone event.Records?[0]?.cf?.request
 
 getResponse = (event) -> Value.clone event.Records?[0]?.cf?.response
 
-getURL = (request) ->
+getRequestURL = (request) ->
   # do ({ scheme, domain, port, target, url } = {}) ->
   do ({ scheme, host, target, url } = {}) ->
     scheme = request.origin.custom.protocol
     # domain = request.origin.custom.domainName
     # port = request.origin.custom.port
-    host = getHeader request, "host"
+    host = getRequestHeader request, "host"
     target = request.uri
     # if port == ""
     #   url = "#{scheme}://#{domain}#{target}"
@@ -22,23 +29,15 @@ getURL = (request) ->
     url = "#{scheme}://#{host}#{target}"
     ( new URL url ).href
 
-getMethod = (request) ->
+getRequestTarget = (request) -> request.uri
+
+getRequestMethod = (request) ->
   Text.toLowerCase request.method
 
-# TODO set the host header?
-setOrigin = Fn.tee (request, value) ->
-  request.origin.custom.domainName = value
-  setHeader request, "host", value
-
-getHeader = (request, key) ->
+getRequestHeader = (request, key) ->
   request.headers[ Text.toLowerCase key ]?[0]?.value
 
-setHeader = Fn.tee (request, key, value) ->
-  request.headers ?= {}
-  request.headers[ key ] ?= []
-  request.headers[ key ].push { value }
-
-getHeaders = (request) ->
+getRequestHeaders = (request) ->
   do ( { result, key, value } = {}) ->
     result = {}
     for key, values of request.headers
@@ -46,27 +45,94 @@ getHeaders = (request) ->
         (result[ key ] ?= []).push value
     result
 
-createResponse = ({ status }) ->
-  status: status.toString()
+getRequestContent = (request) ->
+  if request.body?
+    if request.body.encoding == "base64"
+      # TODO handle non-text content
+      convert from: "base64", to: "utf8", request.body.data
+    else
+      request.body.data
 
-getStatus = (response) ->
+getNormalizedRequest = (event) ->
+  request = getRequest event
+  url: getRequestURL request
+  target: getRequestTarget request
+  method: getRequestMethod request
+  headers: getRequestHeaders request
+  content: getRequestContent request
+
+# TODO set the host header?
+setRequestOrigin = Fn.tee (request, value) ->
+  request.origin.custom.domainName = value
+  setHeader request, "host", value
+
+setHeader = Fn.tee (object, key, value) ->
+  object.headers ?= {}
+  object.headers[ key ] ?= []
+  object.headers[ key ].push { value }
+
+setRequestHeader = setHeader
+
+getResponseStatusCode = (response) ->
   Text.parseNumber response.status
 
-setBody = Fn.tee (response, content) ->
-  response.body = content
-  response.bodyEncoding = "text"
+setResponseStatusCode = (response, { status, description }) ->
+  response.status = status ? 
+    if description? then getStatusFromDescription description
 
+setResponseStatusDescription = (response, { status, description }) ->
+  response.statusDescription = description ? 
+    if status? then getDescriptionFromStatus status
+
+setResponseHeader = setHeader
+
+setResponseHeaders = (response, { headers }) ->
+  for key, value of headers
+    setResponseHeader response, key, value[0]
+  response
+
+setResponseBodyEncoding = (response, { encoding }) ->
+  if encoding == "base64"
+    response.bodyEncoding = "base64"
+  else
+    response.bodyEncoding = "text"
+
+getDenormalizedResponse = (response) ->
+  _response = {}
+  setResponseStatusCode _response, response
+  setResponseStatusDescription _response, response
+  setResponseHeaders _response, response
+  setResponseBody _response, response
+  setResponseBodyEncoding _response, response
+  _response
 
 export {
+
+  getStatusFromDescription
+  getDescriptionFromStatus
+
   getRequest
   getResponse
-  getURL
-  getMethod
-  setOrigin
-  getHeader
-  getHeaders
-  setHeader
-  createResponse
-  getStatus
-  setBody
+
+  getRequestURL
+  getRequestTarget
+  getRequestMethod
+  getRequestHeader
+  getRequestHeaders
+  getRequestContent
+  getNormalizedRequest
+
+  setRequestOrigin
+  setRequestHeader
+
+  getResponseStatusCode
+
+  setResponseStatusCode
+  setResponseStatusDescription
+  setResponseHeader
+  setResponseHeaders
+  setResponseBody
+  setResponseBodyEncoding
+  getDenormalizedResponse
+
 }

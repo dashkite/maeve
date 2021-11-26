@@ -45,49 +45,49 @@ do ->
         request = Edge.getResponse edgeResponseEvent
         assert.equal "200", request.status
       
-      test "getURL", ->
+      test "getRequestURL", ->
         request = Edge.getRequest edgeRequestEvent
         assert.equal "https://account-development.dashkite.io/",
-          Edge.getURL request
+          Edge.getRequestURL request
 
-      test "getMethod", ->
+      test "getRequestMethod", ->
         request = Edge.getRequest edgeRequestEvent
-        assert.equal "get", Edge.getMethod request
+        assert.equal "get", Edge.getRequestMethod request
       
-      test "setHeader", ->
+      test "setRequestHeader", ->
         request = Edge.getRequest edgeRequestEvent
-        Edge.setHeader request, "x-api-key", "12345"
+        Edge.setRequestHeader request, "x-api-key", "12345"
         assert.equal "12345", request.headers["x-api-key"][0]?.value
 
-      test "getHeaders", ->
+      test "getRequestHeaders", ->
         request = Edge.getRequest edgeRequestEvent
-        headers = Edge.getHeaders request
+        headers = Edge.getRequestHeaders request
         assert.equal "Amazon CloudFront",
           headers?[ "user-agent" ]?[0]
 
-      test "setOrigin", ->
+      test "setRequestOrigin", ->
         request = Edge.getRequest edgeRequestEvent
-        Edge.setOrigin request, "alb-account-development-api.dashkite.com"
+        Edge.setRequestOrigin request, "alb-account-development-api.dashkite.com"
         assert.equal "alb-account-development-api.dashkite.com",
           request.origin.custom.domainName
 
-      test "createResponse", ->
-        response = Edge.createResponse status: 404
-        assert.equal "404", response.status
-
-      test "setStatus", ->
+      test "getResponseStatusCode", ->
         response = Edge.getResponse edgeResponseEvent
-        assert.equal 200, Edge.getStatus response
+        assert.equal 200, Edge.getResponseStatusCode response
       
-      test "setBody", ->
+      test "setResponseBody", ->
         response = Edge.getResponse edgeResponseEvent
-        Edge.setBody response, "hello world"
+        Edge.setResponseBody response, content: "hello world"
         assert.equal "hello world", response.body
-        assert.equal "text", response.bodyEncoding
       
-      test "setHeader", ->
+      test "setResponseBodyEncoding", ->
         response = Edge.getResponse edgeResponseEvent
-        Edge.setHeader response, "grants", "12345"
+        Edge.setResponseBodyEncoding response, encoding: "base64"
+        assert.equal "base64", response.bodyEncoding
+
+      test "setResponseHeader", ->
+        response = Edge.getResponse edgeResponseEvent
+        Edge.setResponseHeader response, "grants", "12345"
         assert.equal "12345", response.headers["grants"][0]?.value
 
     ]

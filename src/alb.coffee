@@ -3,6 +3,12 @@ import * as Type from "@dashkite/joy/type"
 import * as Value from "@dashkite/joy/value"
 import * as Text from "@dashkite/joy/text"
 
+import {
+  getStatusFromDescription
+  getDescriptionFromStatus
+  setResponseBody
+} from "./common"
+
 headerCase = (name) ->
   name
     .replace /^[A-Za-z]/, (c) -> c.toUpperCase()
@@ -35,7 +41,7 @@ getRequestHeaders = (request) ->
   result
 
 getRequestContent = (request) ->
-  if request.isBase64Encoded
+  if request.isBase64Encoded == true
     throw new Error "Maeve does not yet support base64 encoded body content"
   else
     request.body
@@ -48,12 +54,12 @@ getNormalizedRequest = (event) ->
   content: getRequestContent request
 
 setResponseStatusCode = (response, { status, description }) ->
-  # TODO possibly infer status from description
-  response.statusCode = status
+  response.statusCode = status ? 
+    if description? then getStatusFromDescription description
 
 setResponseStatusDescription = (response, { status, description }) ->
-  # TODO possibly infer description from status
-  response.statusDescription = description
+  response.statusDescription = description ? 
+    if status? then getDescriptionFromStatus status
 
 setResponseHeader = (response, key, value) ->
   response.headers ?= {}
@@ -65,10 +71,7 @@ setResponseHeaders = (response, { headers }) ->
     setResponseHeader response, key, value[0]
   response
 
-setResponseBody = (response, { content }) ->
-  response.body = content
-
-setResponseBodyIsBase64Encoded = (response, { content, encoding }) ->
+setResponseBodyEncoding = (response, { content, encoding }) ->
   if encoding == "base64"
     response.isBase64Encoded = true
   else
@@ -80,10 +83,12 @@ getDenormalizedResponse = (response) ->
   setResponseStatusDescription _response, response
   setResponseHeaders _response, response
   setResponseBody _response, response
-  setResponseBodyIsBase64Encoded _response, response
+  setResponseBodyEncoding _response, response
   _response
 
 export {
+  getStatusFromDescription
+  getDescriptionFromStatus
   getRequest
   getRequestTarget
   getRequestMethod
@@ -92,9 +97,8 @@ export {
   getNormalizedRequest
   setResponseStatusCode
   setResponseStatusDescription
-  setResponseHeader
   setResponseHeaders
   setResponseBody
-  setResponseBodyIsBase64Encoded
+  setResponseBodyEncoding
   getDenormalizedResponse
 }

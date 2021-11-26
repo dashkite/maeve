@@ -4,17 +4,8 @@
   "description": "Implement and test Lambdas more easily",
   "main": "build/node/src/index.js",
   "exports": {
-    ".": {
-      "browser": "./build/browser/src/index.js",
-      "node": "./build/node/src/index.js"
-    },
-    "./lambda/emulator": {
-      "browser": "./build/browser/src/lambda/emulator.js",
-      "node": "./build/node/src/lambda/emulator.js"
-    },
-    "./conversions/*": {
-      "browser": "./build/browser/src/conversions/*.js",
-      "node": "./build/node/src/conversions/*.js"
+    "./*": {
+      "node": "./build/node/src/*.js"
     }
   },
   "imports": {
@@ -37,7 +28,9 @@
   },
   "homepage": "https://github.com/dashkite/maeve#readme",
   "dependencies": {
-    "@dashkite/joy": "^0.3.11"
+    "@dashkite/bake": "^0.0.6",
+    "@dashkite/joy": "^0.3.11",
+    "statuses": "^2.0.1"
   },
   "devDependencies": {
     "@dashkite/amen": "^0.1.2",

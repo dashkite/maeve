@@ -6,7 +6,6 @@ import * as Text from "@dashkite/joy/text"
 import {
   getStatusFromDescription
   getDescriptionFromStatus
-  setResponseBody
 } from "./common"
 
 headerCase = (name) ->
@@ -70,6 +69,12 @@ setResponseHeaders = (response, { headers }) ->
   for key, value of headers
     setResponseHeader response, key, value[0]
   response
+
+setResponseBody = (response, { content }) ->
+  if Type.isString content
+    response.body = content
+  else
+    response.body = JSON.stringify content
 
 setResponseBodyEncoding = (response, { content, encoding }) ->
   if encoding == "base64"

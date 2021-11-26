@@ -83,12 +83,12 @@ do ->
       test "setResponseBody", ->
         response = Edge.getResponse edgeResponseEvent
         Edge.setResponseBody response, content: "hello world"
-        assert.equal "hello world", response.body
+        assert.equal "hello world", response.body.data
       
       test "setResponseBodyEncoding", ->
         response = Edge.getResponse edgeResponseEvent
         Edge.setResponseBodyEncoding response, encoding: "base64"
-        assert.equal "base64", response.bodyEncoding
+        assert.equal "base64", response.body.encoding
 
       test "setResponseHeader", ->
         response = Edge.getResponse edgeResponseEvent

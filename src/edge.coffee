@@ -7,7 +7,6 @@ import { convert } from "@dashkite/bake"
 import {
   getStatusFromDescription
   getDescriptionFromStatus
-  setResponseBody
 } from "./common"
 
 getRequest = (event) -> Value.clone event.Records?[0]?.cf?.request
@@ -95,11 +94,19 @@ setResponseHeaders = (response, { headers }) ->
     setResponseHeader response, key, value[0]
   response
 
-setResponseBodyEncoding = (response, { encoding }) ->
-  if encoding == "base64"
-    response.bodyEncoding = "base64"
+setResponseBody = (response, { content }) ->
+  response.body ?= {}
+  if Type.isString content
+    response.body.data = content
   else
-    response.bodyEncoding = "text"
+    response.body.data = JSON.stringify content
+
+setResponseBodyEncoding = (response, { encoding }) ->
+  response.body ?= {}
+  if encoding == "base64"
+    response.body.encoding = "base64"
+  else
+    rresponse.body.encoding = "text"
 
 getDenormalizedResponse = (response) ->
   _response = {}

@@ -82,6 +82,7 @@ getResponseStatusCode = (response) ->
 setResponseStatusCode = (response, { status, description }) ->
   response.status = status ? 
     if description? then getStatusFromDescription description
+  response.status = response.status.toString()
 
 setResponseStatusDescription = (response, { status, description }) ->
   response.statusDescription = description ? 

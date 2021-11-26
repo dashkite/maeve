@@ -95,6 +95,12 @@ do ->
         Edge.setResponseHeader response, "grants", "12345"
         assert.equal "12345", response.headers["grants"][0]?.value
 
+      test "setResponseStatusCode", ->
+        response = Edge.getResponse edgeResponseEvent
+        Edge.setResponseStatusCode response, status: 200
+        assert.equal "200", response.status
+
+
     ]
 
   ]

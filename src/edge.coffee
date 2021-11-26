@@ -106,7 +106,7 @@ setResponseBodyEncoding = (response, { encoding }) ->
   if encoding == "base64"
     response.body.encoding = "base64"
   else
-    rresponse.body.encoding = "text"
+    response.body.encoding = "text"
 
 getDenormalizedResponse = (response) ->
   _response = {}

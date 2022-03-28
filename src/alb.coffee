@@ -73,8 +73,10 @@ setResponseHeaders = (response, { headers }) ->
 setResponseBody = (response, { content }) ->
   if Type.isString content
     response.body = content
-  else
+  else if TYpe.isDefined content
     response.body = JSON.stringify content
+  else
+    response.body = ""
 
 setResponseBodyEncoding = (response, { content, encoding }) ->
   if encoding == "base64"

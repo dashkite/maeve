@@ -48,6 +48,9 @@ getRequestHeaders = (request) ->
         (result[ key ] ?= []).push value
     result
 
+getRequestBody = (request) ->
+  request.body
+
 getRequestContent = (request) ->
   if request.body?
     if request.body.encoding == "base64"
@@ -55,6 +58,10 @@ getRequestContent = (request) ->
       convert from: "base64", to: "utf8", request.body.data
     else
       request.body.data
+
+getRequestJSON = (request) ->
+  try
+    JSON.parse getRequestContent request
 
 getNormalizedRequest = (event) ->
   request = getRequest event
@@ -96,18 +103,17 @@ setResponseHeaders = (response, { headers }) ->
   response
 
 setResponseBody = (response, { content }) ->
-  response.body ?= {}
   if Type.isString content
-    response.body.data = content
+    response.body = content
   else
-    response.body.data = JSON.stringify content
+    response.body = JSON.stringify content
 
 setResponseBodyEncoding = (response, { encoding }) ->
   response.body ?= {}
   if encoding == "base64"
-    response.body.encoding = "base64"
+    response.bodyEncoding = "base64"
   else
-    response.body.encoding = "text"
+    response.bodyEncoding = "text"
 
 getDenormalizedResponse = (response) ->
   _response = {}
@@ -131,7 +137,9 @@ export {
   getRequestMethod
   getRequestHeader
   getRequestHeaders
+  getRequestBody
   getRequestContent
+  getRequestJSON
   getNormalizedRequest
 
   setRequestOrigin

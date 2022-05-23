@@ -105,8 +105,10 @@ setResponseHeaders = (response, { headers }) ->
 setResponseBody = (response, { content }) ->
   if Type.isString content
     response.body = content
-  else
+  else if content?
     response.body = JSON.stringify content
+  else
+    response.body = ""
 
 setResponseBodyEncoding = (response, { encoding }) ->
   response.body ?= {}

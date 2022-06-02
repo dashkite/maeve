@@ -108,7 +108,7 @@ setResponseBody = (response, { content, encoding }) ->
       content
     else if content?
       switch encoding
-        when "text" then JSON.stringify content
+        when "text", undefined, null then JSON.stringify content
         when "base64" then convert from: "bytes", to: "base64", content
         else
           console.warn "unsupported encoding: #{ encoding }"

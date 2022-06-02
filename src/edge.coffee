@@ -102,13 +102,18 @@ setResponseHeaders = (response, { headers }) ->
     setResponseHeader response, key, value[0]
   response
 
-setResponseBody = (response, { content }) ->
-  if Type.isString content
-    response.body = content
-  else if content?
-    response.body = JSON.stringify content
-  else
-    response.body = ""
+setResponseBody = (response, { content, encoding }) ->
+  response.body = do ->
+    if Type.isString content
+      content
+    else if content?
+      switch encoding
+        when "text" then JSON.stringify content
+        when "base64" then convert from: "bytes", to: "base64", content
+        else
+          console.warn "unsupported encoding: #{ encoding }"
+          content
+    else ""
 
 setResponseBodyEncoding = (response, { encoding }) ->
   response.body ?= {}

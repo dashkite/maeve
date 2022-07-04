@@ -41,7 +41,8 @@ getRequestHeaders = (request) ->
 
 getRequestContent = (request) ->
   if request.isBase64Encoded == true
-    throw new Error "Maeve does not yet support base64 encoded body content"
+    # throw new Error "Maeve does not yet support base64 encoded body content"
+    (Buffer.from request.body, "base64").toString()
   else
     request.body
 

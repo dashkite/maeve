@@ -30,6 +30,7 @@
   "dependencies": {
     "@dashkite/bake": "^0.0.6",
     "@dashkite/joy": "^0.3.16",
+    "@dashkite/media-type": "file:../media-type",
     "statuses": "^2.0.1"
   },
   "devDependencies": {

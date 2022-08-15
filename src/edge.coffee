@@ -3,6 +3,7 @@ import * as Type from "@dashkite/joy/type"
 import * as Value from "@dashkite/joy/value"
 import * as Text from "@dashkite/joy/text"
 import { convert } from "@dashkite/bake"
+import { MediaType } from "@dashkite/media-type"
 
 import {
   getStatusFromDescription
@@ -12,6 +13,12 @@ import {
 getRequest = (event) -> Value.clone event.Records?[0]?.cf?.request
 
 getResponse = (event) -> Value.clone event.Records?[0]?.cf?.response
+
+getRequestTarget = (request) ->
+  if request.querystring == ""
+    request.uri
+  else
+    "#{request.uri}?#{request.querystring}"
 
 getRequestURL = (request) ->
   # do ({ scheme, domain, port, target, url } = {}) ->
@@ -27,12 +34,6 @@ getRequestURL = (request) ->
     #   url = "#{scheme}://#{domain}:#{port}#{target}"
     url = "#{scheme}://#{host}#{target}"
     ( new URL url ).href
-
-getRequestTarget = (request) ->
-  if request.querystring == ""
-    request.uri
-  else
-    "#{request.uri}?#{request.querystring}"
 
 getRequestMethod = (request) ->
   Text.toLowerCase request.method
@@ -52,16 +53,20 @@ getRequestBody = (request) ->
   request.body
 
 getRequestContent = (request) ->
+
   if request.body?
-    if request.body.encoding == "base64"
-      # TODO handle non-text content
+
+    data = if request.body.encoding == "base64"
       convert from: "base64", to: "utf8", request.body.data
     else
       request.body.data
 
-getRequestJSON = (request) ->
-  try
-    JSON.parse getRequestContent request
+    # TODO handle more formats
+    if ( type = getRequestHeader request, "content-type" )?
+      switch MediaType.category type
+        when "json" then JSON.parse data
+        else data
+    else data
 
 getNormalizedRequest = (event) ->
   request = getRequest event
@@ -103,6 +108,7 @@ setResponseHeaders = (response, { headers }) ->
   response
 
 setResponseBody = (response, { content, encoding }) ->
+  setResponseBodyEncoding response, { encoding }
   response.body = do ->
     if Type.isString content
       content
@@ -112,11 +118,10 @@ setResponseBody = (response, { content, encoding }) ->
         when "base64" then convert from: "bytes", to: "base64", content
         else
           console.warn "unsupported encoding: #{ encoding }"
-          content
+          content.toString()
     else ""
-
+      
 setResponseBodyEncoding = (response, { encoding }) ->
-  response.body ?= {}
   if encoding == "base64"
     response.bodyEncoding = "base64"
   else
@@ -146,7 +151,6 @@ export {
   getRequestHeaders
   getRequestBody
   getRequestContent
-  getRequestJSON
   getNormalizedRequest
 
   setRequestOrigin

@@ -50,16 +50,16 @@ getRequestHeaders = (request) ->
     result
 
 getRequestBody = (request) ->
-  request.body
+  if request.body?.encoding == "base64"
+    convert from: "base64", to: "utf8", request.body.data
+  else
+    request.body?.data
 
 getRequestContent = (request) ->
 
   if request.body?
 
-    data = if request.body.encoding == "base64"
-      convert from: "base64", to: "utf8", request.body.data
-    else
-      request.body.data
+    data = getRequestBody request
 
     # TODO handle more formats
     if ( type = getRequestHeader request, "content-type" )?
@@ -75,6 +75,7 @@ getNormalizedRequest = (event) ->
   method: getRequestMethod request
   headers: getRequestHeaders request
   content: getRequestContent request
+  _: request
 
 # TODO set the host header?
 setRequestOrigin = Fn.tee (request, value) ->

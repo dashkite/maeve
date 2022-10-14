@@ -2,6 +2,7 @@ import * as Fn from "@dashkite/joy/function"
 import * as Type from "@dashkite/joy/type"
 import * as Value from "@dashkite/joy/value"
 import * as Text from "@dashkite/joy/text"
+import { convert } from "@dashkite/bake"
 
 import {
   getStatusFromDescription
@@ -40,10 +41,11 @@ getRequestHeaders = (request) ->
   result
 
 getRequestContent = (request) ->
-  if request.isBase64Encoded == true
-    throw new Error "Maeve does not yet support base64 encoded body content"
-  else
-    request.body
+  if request.body? && request.body.length > 0
+    if request.isBase64Encoded == true
+      convert from: "base64", to: "bytes", request.body
+    else
+      request.body
 
 getNormalizedRequest = (event) ->
   request = getRequest event

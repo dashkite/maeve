@@ -4,11 +4,14 @@ import assert from "@dashkite/assert"
 import * as _ from "@dashkite/joy"
 import * as ALB from "../src/alb"
 import * as Edge from "../src/edge"
+import * as Sublime from "../src/sublime"
 
 import albRequest from "./data/alb-request"
 import albResponse from "./data/alb-response"
 import edgeRequestEvent from "./data/edge-request-event"
 import edgeResponseEvent from "./data/edge-response-event"
+
+import scenarios from "./scenarios"
 
 do ->
 
@@ -106,6 +109,21 @@ do ->
         assert.equal "200", response.status
 
 
+    ]
+
+    test "Sublime", [
+      
+      test "response generic", do ->
+
+        runner = ( scenario ) -> ->
+          response = Sublime.response scenario.argument
+          console.log response
+          assert.deepEqual scenario.result, response
+
+        for scenario in scenarios.sublime.response
+          test scenario.name, runner scenario
+          
+    
     ]
 
   ]

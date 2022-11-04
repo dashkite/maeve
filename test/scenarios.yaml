@@ -1,4 +1,15 @@
 sublime:
+  request:
+
+    - name: simple request
+      argument:
+        url: "https://foobar.com/hello?name=world"
+      result:
+        url: "https://foobar.com/hello?name=world"
+        origin: "https://foobar.com"
+        domain: foobar.com
+        target: "/hello?name=world"
+
   response:
 
     - name: status description as text

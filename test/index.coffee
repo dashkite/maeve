@@ -112,12 +112,20 @@ do ->
     ]
 
     test "Sublime", [
+
+      test "request generic", do ->
       
+        runner = ( scenario ) -> ->
+          request = Sublime.request scenario.argument
+          assert.deepEqual scenario.result, request
+
+        for scenario in scenarios.sublime.request
+          test scenario.name, runner scenario        
+
       test "response generic", do ->
 
         runner = ( scenario ) -> ->
           response = Sublime.response scenario.argument
-          console.log response
           assert.deepEqual scenario.result, response
 
         for scenario in scenarios.sublime.response

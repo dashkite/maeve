@@ -1,8 +1,7 @@
 import * as Fn from "@dashkite/joy/function"
 import * as Type from "@dashkite/joy/type"
 import * as Text from "@dashkite/joy/text"
-import status from "statuses"
-import { convert } from "../convert"
+import { convert } from "./convert"
 
 Request =
 
@@ -20,10 +19,10 @@ Request =
       request.headers?[ name ]?.join ", "
 
   from: ( format, request ) ->
-    convert from: format, to: "sublime"
+    convert type: "request", from: format, to: "sublime", request
   
   to: ( format, request ) ->
-    convert from: "sublime", to: format
+    convert type: "request", from: "sublime", to: format, request
 
 request = Fn.pipe [
   Request.URL.normalize

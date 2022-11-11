@@ -3,6 +3,7 @@ import { generic } from "@dashkite/joy/generic"
 import * as Type from "@dashkite/joy/type"
 import * as Text from "@dashkite/joy/text"
 import status from "statuses"
+import { convert } from "./convert"
 
 Response =
 
@@ -30,63 +31,10 @@ Response =
     set: generic
       name: "Response.Headers.set"
       description: "Set Sublime header"
-      [
-        [ 
-          [ Type.isObject, Type.isString, Type.isString ]
-          ( response, key, value ) -> 
-            Response.Headers.set response, key, [ value ]
-        ]
-        [ 
-          [ Type.isObject, Type.isString, Type.isInteger ]
-          ( response, key, value ) -> 
-            Response.Headers.set response, key, value.toString()
-        ]
-        [ 
-          [ Type.isObject, Type.isString, Type.isArray ]
-          ( response, key, values ) ->
-            Object.assign response.headers, [ key ]: values
-        ]
-        [ 
-          [ Type.isObject, Type.isObject ]
-          ( response, headers ) ->
-            for key, value of headers
-              Response.Headers.set response, key, value
-        ]
-        [ 
-          [ Type.isObject, Type.isFunction ]
-          ( response, setter ) -> setter response.headers
-        ]
-      ]
 
     append: generic
       name: "Response.Headers.append"
       description: "Append to Sublime header"
-      [
-        [ 
-          [ Type.isObject, Type.isString, Type.isString ]
-          ( response, key, value ) ->
-            response.headers ?= {}
-            response.headers[ key ] ?= []
-            response.headers[ key ].push value
-        ]
-        [ 
-          [ Type.isObject, Type.isString, Type.isInteger ]
-          ( response, key, value ) -> 
-            Response.Headers.append response, key, value.toString()
-        ]
-        [ 
-          [ Type.isObject, Type.isString, Type.isArray ]
-          ( response, key, values ) ->
-            for value in values
-              Response.Headers.append response, key, value
-        ]
-        [ 
-          [ Type.isObject, Type.isObject ]
-          ( response, headers ) ->
-            for key, value of headers
-              Response.Headers.append response, key, value
-        ]
-      ]
 
   Content:
 
@@ -112,10 +60,64 @@ Response =
       response.status = 204
 
   from: ( format, request ) ->
-    convert from: format, to: "sublime"
+    convert type: "response", from: format, to: "sublime", request
 
   to: ( format, response ) -> 
-    convert from: "sublime", to: format
+    convert type: "response", from: "sublime", to: format, request
+
+# set header
+
+generic Response.Headers.set,
+  Type.isObject, Type.isString, Type.isString,
+  ( response, key, value ) -> 
+    Response.Headers.set response, key, [ value ]
+
+generic Response.Headers.set,
+  Type.isObject, Type.isString, Type.isInteger,
+  ( response, key, value ) -> 
+    Response.Headers.set response, key, value.toString()
+
+generic Response.Headers.set,
+  Type.isObject, Type.isString, Type.isArray,
+  ( response, key, values ) ->
+    Object.assign response.headers, [ key ]: values
+
+generic Response.Headers.set,
+  Type.isObject, Type.isObject,
+  ( response, headers ) ->
+    for key, value of headers
+      Response.Headers.set response, key, value
+
+generic Response.Headers.set,
+  Type.isObject, Type.isFunction,
+  ( response, setter ) -> setter response.headers
+
+
+# append header
+
+generic Response.Headers.append,
+  Type.isObject, Type.isString, Type.isString,
+  ( response, key, value ) ->
+    response.headers ?= {}
+    response.headers[ key ] ?= []
+    response.headers[ key ].push value
+
+generic Response.Headers.append,
+  Type.isObject, Type.isString, Type.isInteger,
+  ( response, key, value ) -> 
+    Response.Headers.append response, key, value.toString()
+
+generic Response.Headers.append,
+  Type.isObject, Type.isString, Type.isArray,
+  ( response, key, values ) ->
+    for value in values
+      Response.Headers.append response, key, value
+
+generic Response.Headers.append,
+  Type.isObject, Type.isObject,
+  ( response, headers ) ->
+    for key, value of headers
+      Response.Headers.append response, key, value
 
 response = generic
   name: "response"

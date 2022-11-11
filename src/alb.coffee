@@ -49,6 +49,7 @@ getRequestContent = (request) ->
 
 getNormalizedRequest = (event) ->
   request = getRequest event
+  domain: getRequestHeader request, "host"
   target: getRequestTarget request
   method: getRequestMethod request
   headers: getRequestHeaders request

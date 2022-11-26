@@ -66,11 +66,17 @@ setResponseStatusDescription = (response, { status, description }) ->
 setResponseHeader = (response, key, value) ->
   response.headers ?= {}
   # see comment above for getRequestHeader
-  response.headers[ headerCase key ] = value
+  if Type.isString value
+    response.headers[ headerCase key ] = value
+  else if Type.isArray value
+    response.headers[ headerCase key ] = value.join ", "
+  else
+    response.headers[ headerCase key ] = value.toString()
+
 
 setResponseHeaders = (response, { headers }) ->
   for key, value of headers
-    setResponseHeader response, key, value[0]
+    setResponseHeader response, key, value
   response
 
 setResponseBody = (response, { content }) ->

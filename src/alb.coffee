@@ -19,7 +19,8 @@ getRequest = (event) -> Value.clone event
 getRequestTarget = (request) ->
   do ({ target, url } = {}) ->
     target = request.path
-    query = (new URLSearchParams request.queryStringParameters).toString()
+    querystring = (new URLSearchParams request.queryStringParameters).toString()
+    query = decodeURIComponent querystring #AWS already encoded it
     if query != ""
       target += "?#{query}"
     target
@@ -54,6 +55,7 @@ getNormalizedRequest = (event) ->
   method: getRequestMethod request
   headers: getRequestHeaders request
   content: getRequestContent request
+  _: request
 
 setResponseStatusCode = (response, { status, description }) ->
   response.statusCode = status ? 
@@ -106,6 +108,7 @@ export {
   getRequest
   getRequestTarget
   getRequestMethod
+  getRequestContent
   getRequestHeader
   getRequestHeaders
   getNormalizedRequest

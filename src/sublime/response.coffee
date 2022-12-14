@@ -28,6 +28,9 @@ Response =
     initialize: Fn.tee ( response ) ->
       response.headers ?= {}
 
+    get: ( response, name ) ->
+      response.headers?[ name ]?.join ", "
+
     set: generic
       name: "Response.Headers.set"
       description: "Set Sublime header"

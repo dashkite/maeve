@@ -83,6 +83,7 @@ generic Response.Headers.set,
 generic Response.Headers.set,
   Type.isObject, Type.isString, Type.isArray,
   ( response, key, values ) ->
+    response.headers ?= {}
     Object.assign response.headers, [ key ]: values
 
 generic Response.Headers.set,
@@ -93,7 +94,9 @@ generic Response.Headers.set,
 
 generic Response.Headers.set,
   Type.isObject, Type.isFunction,
-  ( response, setter ) -> setter response.headers
+  ( response, setter ) -> 
+    response.headers ?= {}
+    setter response.headers
 
 
 # append header

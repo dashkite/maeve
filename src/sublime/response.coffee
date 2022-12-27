@@ -9,6 +9,10 @@ Response =
 
   Status:
 
+    ok: ( response ) ->
+      Response.Status.resolve response
+      200 <= response.status < 300
+
     resolve: Fn.tee ( response ) ->
       if response.status?
         response.description = Text.toLowerCase status response.status

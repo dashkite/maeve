@@ -35,6 +35,9 @@ Response =
     get: ( response, name ) ->
       response.headers?[ name ]?.join ", "
 
+    remove: ( response, name ) ->
+      delete response.headers[ name ]
+
     set: generic
       name: "Response.Headers.set"
       description: "Set Sublime header"
@@ -75,6 +78,9 @@ Response =
 # set header
 
 generic Response.Headers.set,
+  Type.isObject, Type.isString, Type.isUndefined, ->
+
+generic Response.Headers.set,
   Type.isObject, Type.isString, Type.isString,
   ( response, key, value ) -> 
     Response.Headers.set response, key, [ value ]
@@ -104,6 +110,9 @@ generic Response.Headers.set,
 
 
 # append header
+
+generic Response.Headers.append,
+  Type.isObject, Type.isString, Type.isUndefined, ->
 
 generic Response.Headers.append,
   Type.isObject, Type.isString, Type.isString,

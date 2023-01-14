@@ -1,0 +1,68 @@
+sublime:
+  request:
+
+    - name: simple request
+      argument:
+        url: "https://foobar.com/hello?name=world"
+      result:
+        url: "https://foobar.com/hello?name=world"
+        origin: "https://foobar.com"
+        domain: foobar.com
+        target: "/hello?name=world"
+
+  response:
+
+    - name: status description as text
+      argument: not found
+      result:
+        status: 404
+        description: not found
+        headers: {}
+
+    - name: status description as object
+      argument: 
+        description: not found
+      result:
+        status: 404
+        description: not found
+        headers: {}
+
+    - name: status as number
+      argument: 200
+      result:
+        status: 200
+        description: ok
+        headers: {}
+
+    - name: empty object
+      argument: {}
+      result:
+        status: 204
+        description: no content
+        headers: {}
+
+    - name: content text with no length
+      argument:
+        content: hello, world!
+      result:
+        status: 200
+        description: ok
+        headers:
+          content-type:
+            - text/plain
+          content-length:
+            - 13
+        content: hello, world!
+
+    - name: content object
+      argument:
+        content:
+          greeting: hello, world!
+      result:
+        status: 200
+        description: ok
+        headers:
+          content-type:
+            - application/json
+        content:
+          greeting: hello, world!

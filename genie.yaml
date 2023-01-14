@@ -13,4 +13,5 @@ presets:
       node:
         - preset: js
           glob:
-            - "{src,test}/**/*.yaml"
+            - "test/**/*.yaml"
+

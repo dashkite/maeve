@@ -4,11 +4,14 @@ import assert from "@dashkite/assert"
 import * as _ from "@dashkite/joy"
 import * as ALB from "../src/alb"
 import * as Edge from "../src/edge"
+import * as Sublime from "../src/sublime"
 
 import albRequest from "./data/alb-request"
 import albResponse from "./data/alb-response"
 import edgeRequestEvent from "./data/edge-request-event"
 import edgeResponseEvent from "./data/edge-response-event"
+
+import scenarios from "./scenarios"
 
 do ->
 
@@ -64,6 +67,11 @@ do ->
         Edge.setRequestHeader request, "x-api-key", "12345"
         assert.equal "12345", request.headers["x-api-key"][0]?.value
 
+      test "getRequestHeader", ->
+        request = Edge.getRequest edgeRequestEvent
+        value = Edge.getRequestHeader request, "user-agent"
+        assert.equal "Amazon CloudFront", value
+
       test "getRequestHeaders", ->
         request = Edge.getRequest edgeRequestEvent
         headers = Edge.getRequestHeaders request
@@ -83,12 +91,12 @@ do ->
       test "setResponseBody", ->
         response = Edge.getResponse edgeResponseEvent
         Edge.setResponseBody response, content: "hello world"
-        assert.equal "hello world", response.body.data
+        assert.equal "hello world", response.body
       
       test "setResponseBodyEncoding", ->
         response = Edge.getResponse edgeResponseEvent
         Edge.setResponseBodyEncoding response, encoding: "base64"
-        assert.equal "base64", response.body.encoding
+        assert.equal "base64", response.bodyEncoding
 
       test "setResponseHeader", ->
         response = Edge.getResponse edgeResponseEvent
@@ -101,6 +109,29 @@ do ->
         assert.equal "200", response.status
 
 
+    ]
+
+    test "Sublime", [
+
+      test "request generic", do ->
+      
+        runner = ( scenario ) -> ->
+          request = Sublime.request scenario.argument
+          assert.deepEqual scenario.result, request
+
+        for scenario in scenarios.sublime.request
+          test scenario.name, runner scenario        
+
+      test "response generic", do ->
+
+        runner = ( scenario ) -> ->
+          response = Sublime.response scenario.argument
+          assert.deepEqual scenario.result, response
+
+        for scenario in scenarios.sublime.response
+          test scenario.name, runner scenario
+          
+    
     ]
 
   ]

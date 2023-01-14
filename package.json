@@ -4,13 +4,16 @@
   "description": "Implement and test Lambdas more easily",
   "main": "build/node/src/index.js",
   "exports": {
+    "./sublime": {
+      "node": "./build/node/src/sublime/index.js"
+    },
     "./*": {
       "node": "./build/node/src/*.js"
     }
   },
-  "imports": {
-    "#helpers": "./build/node/src/helpers/index.js"
-  },
+  "files": [
+    "build/node/src"
+  ],
   "directories": {
     "test": "test"
   },
@@ -30,6 +33,8 @@
   "dependencies": {
     "@dashkite/bake": "^0.0.6",
     "@dashkite/joy": "^0.3.16",
+    "@dashkite/media-type": "file:../media-type",
+    "node-fetch": "^2.6.7",
     "statuses": "^2.0.1"
   },
   "devDependencies": {

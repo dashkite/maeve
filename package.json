@@ -33,7 +33,7 @@
   "dependencies": {
     "@dashkite/bake": "^0.0.6",
     "@dashkite/joy": "^0.3.16",
-    "@dashkite/media-type": "file:../media-type",
+    "@dashkite/media-type": "link:../media-type",
     "node-fetch": "^2.6.7",
     "statuses": "^2.0.1"
   },
@@ -42,6 +42,6 @@
     "@dashkite/amen-console": "^0.0.2",
     "@dashkite/assert": "^0.1.4",
     "@dashkite/genie": "^0.5.11",
-    "@dashkite/genie-presets": "^0.6.0"
+    "@dashkite/genie-presets": "^0.6.2"
   }
 }

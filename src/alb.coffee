@@ -84,7 +84,7 @@ setResponseHeaders = (response, { headers }) ->
 setResponseBody = (response, { content }) ->
   if Type.isString content
     response.body = content
-  else if TYpe.isDefined content
+  else if Type.isDefined content
     response.body = JSON.stringify content
   else
     response.body = ""

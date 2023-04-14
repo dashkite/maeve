@@ -51,7 +51,7 @@ sublime:
           content-type:
             - text/plain
           content-length:
-            - 13
+            - "13"
         content: hello, world!
 
     - name: content object
@@ -66,3 +66,4 @@ sublime:
             - application/json
         content:
           greeting: hello, world!
+        

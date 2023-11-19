@@ -66,4 +66,33 @@ sublime:
             - application/json
         content:
           greeting: hello, world!
-        
+furl:
+  request:
+    - name: baseline request
+      request:
+        url: https://api.acme.io/foo/bargreeting=alice&audience=world
+        origin: https://api.acme.io
+        domain: api.acme.io
+        target: "/foo/bar"
+        query:
+          greeting: alice
+          audience: world
+        headers:
+          content-type:
+            - application/json
+          host:
+            - api.acme.io
+          authorization:
+            - abcdef12345
+        content: Hello, world!
+  response:
+    # this is based on the example response
+    - name: baseline response
+      response:
+        status: 201
+        description: ok
+        headers:
+          content-type:
+            - application/json
+        content:
+          greeting: hello, world!

@@ -5,11 +5,14 @@ import * as _ from "@dashkite/joy"
 import * as ALB from "../src/alb"
 import * as Edge from "../src/edge"
 import * as Sublime from "../src/sublime"
+import Furl from "../src/furl"
 
-import albRequest from "./data/alb-request"
-import albResponse from "./data/alb-response"
-import edgeRequestEvent from "./data/edge-request-event"
-import edgeResponseEvent from "./data/edge-response-event"
+import albRequest from "./data/alb/request"
+import albResponse from "./data/alb/response"
+import edgeRequestEvent from "./data/edge/request"
+import edgeResponseEvent from "./data/edge/response"
+import furlRequest from "./data/furl/request"
+import furlResponse from "./data/furl/response"
 
 import scenarios from "./scenarios"
 
@@ -132,6 +135,18 @@ do ->
           test scenario.name, runner scenario
           
     
+    ]
+
+    test "Furl", [
+
+      test "request to Sublime", ->
+        assert.deepEqual scenarios.furl.request[0].request,
+          Furl.Request.convert furlRequest
+
+      test "Sublime to response", ->
+        assert.deepEqual furlResponse,
+          Furl.Response.convert scenarios.furl.response[0].response
+
     ]
 
   ]

@@ -1,0 +1,5 @@
+statusCode: 201
+headers:
+  Content-Type: application/json
+body: '{"greeting":"hello, world!"}'
+isBase64Encoded: false

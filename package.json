@@ -7,9 +7,16 @@
     "./sublime": {
       "node": "./build/node/src/sublime/index.js"
     },
+    "./furl": {
+      "node": "./build/node/src/furl/index.js"
+    },
     "./*": {
       "node": "./build/node/src/*.js"
     }
+  },
+  "imports": {
+    "#sublime/*": "./build/node/src/sublime/*.js",
+    "#furl": "./build/node/src/furl/index.js"
   },
   "files": [
     "build/node/src"

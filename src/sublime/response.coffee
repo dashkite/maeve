@@ -73,8 +73,7 @@ Response =
     convert type: "response", from: format, to: "sublime", request
 
   to: ( format, response ) -> 
-    convert type: "response", from: "sublime", to: format, request
-
+    convert type: "response", from: "sublime", to: format, response
 
 # set header
 

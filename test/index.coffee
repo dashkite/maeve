@@ -5,7 +5,6 @@ import * as _ from "@dashkite/joy"
 import * as ALB from "../src/alb"
 import * as Edge from "../src/edge"
 import * as Sublime from "../src/sublime"
-import Furl from "../src/furl"
 
 import albRequest from "./data/alb/request"
 import albResponse from "./data/alb/response"
@@ -141,14 +140,15 @@ do ->
 
       test "request to Sublime", ->
         assert.deepEqual scenarios.furl.request[0].request,
-          Furl.Request.convert furlRequest
+          Sublime.Request.from "furl", furlRequest
 
       test "Sublime to response", ->
         assert.deepEqual furlResponse,
-          Furl.Response.convert scenarios.furl.response[0].response
+          Sublime.Response.to "furl",
+            scenarios.furl.response[0].response
 
     ]
 
   ]
 
-  process.exit success
+  process.exit ( if success then 0 else 1 )

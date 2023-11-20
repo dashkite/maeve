@@ -7,9 +7,12 @@ getOrigin = ( request ) -> "https://#{ getDomain request }"
 
 getURL = ( request ) ->
   target = getTarget request
+  # this is never null
   query = request.rawQueryString
   origin = getOrigin request
-  "#{ origin }#{ target }#{ query }"
+  url = new URL target, origin
+  url.search = new URLSearchParams query
+  url.href
 
 setEntry = ( result, [ key, value ]) ->
   result[ key ] = value

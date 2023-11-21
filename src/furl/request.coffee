@@ -24,6 +24,9 @@ getQuery = ( request ) ->
       ( new URLSearchParams request.rawQueryString ).entries()
     .reduce setEntry, {}
 
+getMethod = ( request ) ->
+  request.requestContext.http.method.toLowerCase()
+
 headerMap =
   "x-forwarded-host": "host"
   "x-authorization": "authorization"
@@ -65,6 +68,7 @@ Request =
     domain: getDomain request
     target: getTarget request
     query: getQuery request
+    method: getMethod request
     headers: getHeaders request
     content: getContent request
 

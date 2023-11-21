@@ -77,6 +77,7 @@ furl:
         query:
           greeting: alice
           audience: world
+        method: post
         headers:
           content-type:
             - application/json

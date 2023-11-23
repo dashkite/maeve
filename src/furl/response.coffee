@@ -1,5 +1,6 @@
 import { convert } from "@dashkite/bake"
 import { MediaType } from "@dashkite/media-type"
+import * as Sublime from "#sublime"
 
 headerCase = (name) ->
   name
@@ -30,7 +31,8 @@ getIsBase64Encoded = ( response ) ->
     else true
 
 Response = 
-  convert: ( response ) ->
+  from: ( response ) ->
+    response = Sublime.response response
     statusCode: response.status
     headers: getHeaders response
     body: getBody response

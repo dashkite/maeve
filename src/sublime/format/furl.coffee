@@ -5,10 +5,10 @@ register
   type: "response"
   from: "sublime"
   to: "furl"
-  Response.convert
+  Response.from
 
 register
   type: "request"
   from: "furl"
   to: "sublime"
-  Request.convert
+  Request.to

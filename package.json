@@ -15,6 +15,7 @@
     }
   },
   "imports": {
+    "#sublime": "./build/node/src/sublime/index.js",
     "#sublime/*": "./build/node/src/sublime/*.js",
     "#furl": "./build/node/src/furl/index.js"
   },

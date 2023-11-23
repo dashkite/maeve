@@ -62,7 +62,7 @@ getRequestContent = (request) ->
 
 Request =
 
-  convert: ( request ) ->
+  to: ( request ) ->
     url: getURL request
     origin: getOrigin request
     domain: getDomain request

@@ -73,7 +73,7 @@ furl:
         url: https://api.acme.io/foo/bar?greeting=alice&audience=world
         origin: https://api.acme.io
         domain: api.acme.io
-        target: "/foo/bar"
+        target: "/foo/bar?greeting=alice&audience=world"
         query:
           greeting: alice
           audience: world

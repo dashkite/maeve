@@ -1,22 +1,34 @@
 import { convert } from "@dashkite/bake"
 import { MediaType } from "@dashkite/media-type"
 
-getTarget = ( request ) -> request.rawPath
+getPath = ( request ) -> request.rawPath
+
+getTarget = ( request ) -> 
+  "#{ getPath request }#{ getQueryString request }"
+
 getDomain = ( request ) -> request.headers[ "x-forwarded-host" ]
+
 getOrigin = ( request ) -> "https://#{ getDomain request }"
 
 getURL = ( request ) ->
   target = getTarget request
-  # this is never null
-  query = request.rawQueryString
   origin = getOrigin request
   url = new URL target, origin
-  url.search = new URLSearchParams query
   url.href
 
 setEntry = ( result, [ key, value ]) ->
   result[ key ] = value
   result
+
+getQueryString = ( request ) ->
+  # rawQueryString is never null
+  query = if request.rawQueryString.startsWith "?"
+    request.rawQueryString[1..]
+  else
+    request.rawQueryString
+  if query == ""
+    query
+  else "?#{ query }"
 
 getQuery = ( request ) -> 
   Array

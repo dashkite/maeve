@@ -53,25 +53,6 @@ getHeaders = ( request ) ->
 
 getContent = ( request ) -> request.body
 
-getRequestBody = (request) ->
-  if request.body?.encoding == "base64"
-    convert from: "base64", to: "utf8", request.body.data
-  else
-    request.body?.data
-
-isJSON = ( request ) ->
-  ( type = request.headers["content-type"])? &&
-      ( "json" == MediaType.category type )
-
-getRequestContent = (request) ->
-  if request.body?
-    if request.isBase64Encoded
-      convert from: "base64", to: "utf8", request.body
-    else
-      if isJSON request
-        JSON.parse request.body
-      else request.body
-
 Request =
 
   to: ( request ) ->

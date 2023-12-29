@@ -11,8 +11,8 @@ import {
 
 headerCase = (name) ->
   name
-    .replace /^[A-Za-z]/, (c) -> c.toUpperCase()
-    .replace /\-[A-Za-z]/, (c) -> c.toUpperCase()
+    .replace /^[A-Za-z]/, (c) -> R.toUpperCase()
+    .replace /\-[A-Za-z]/, (c) -> R.toUpperCase()
 
 getRequest = (event) -> Value.clone event
 

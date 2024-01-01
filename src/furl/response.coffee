@@ -4,8 +4,8 @@ import * as Sublime from "#sublime"
 
 headerCase = (name) ->
   name
-    .replace /^[A-Za-z]/, (c) -> R.toUpperCase()
-    .replace /\-[A-Za-z]/, (c) -> R.toUpperCase()
+    .replace /^[A-Za-z]/, (c) -> c.toUpperCase()
+    .replace /\-[A-Za-z]/, (c) -> c.toUpperCase()
 
 setEntry = ( result, [ key, value ]) ->
   result[ key ] = value ; result

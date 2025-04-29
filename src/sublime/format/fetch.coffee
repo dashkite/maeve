@@ -11,15 +11,7 @@ Fetch =
           result.append key, value
       result
 
-    # TODO define to sublime headers from fetch headers    
-    # to: ( headers ) ->
 
-# TODO define fetch response to sublime response
-# register 
-#   type: "response"
-#   from: "fetch"
-#   to: "sublime"
-#   ( response ) ->
 
 register
   type: "request"

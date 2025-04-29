@@ -30,7 +30,6 @@ getRequestMethod = (request) ->
 
 getRequestHeader = (request, key) ->
   # IMPORTANT The request headers are lowercase, unlike the response headers
-  # TODO Figure out why and/or whether this matters, can we just use lowercase?
   request.headers[ Text.toLowerCase key ]
 
 getRequestHeaders = (request) ->

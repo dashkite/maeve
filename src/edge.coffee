@@ -61,7 +61,6 @@ getRequestContent = (request) ->
 
     data = getRequestBody request
 
-    # TODO handle more formats
     if ( type = getRequestHeader request, "content-type" )?
       switch MediaType.category type
         when "json" then JSON.parse data
@@ -77,7 +76,6 @@ getNormalizedRequest = (event) ->
   content: getRequestContent request
   _: request
 
-# TODO set the host header?
 setRequestOrigin = Fn.tee (request, value) ->
   request.origin.custom.domainName = value
   setHeader request, "host", value

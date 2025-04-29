@@ -53,7 +53,6 @@ Response =
         Response.Content.remove response
       else if response.content? 
         if Type.isString response.content
-          # TODO use byte length not string length!
           Response.Headers.set response,
             "content-length", response.content.length
           Response.Headers.set response, ( headers ) ->

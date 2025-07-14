@@ -20,7 +20,8 @@
     "#furl": "./build/node/src/furl/index.js"
   },
   "files": [
-    "build/node/src"
+    "build/node/src",
+    "build/browser/src"
   ],
   "directories": {
     "test": "test"

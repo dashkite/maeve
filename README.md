@@ -2,100 +2,49 @@
 
 _Implement and test Lambda functions more easily._
 
-> The simulation is elegant, but it's flawed because it was built by your kind. And if there's one thing I know about human nature, it's that your stupidity is only eclipsed by your laziness. Whoever programmed this world cut a few corners, applied the same code inside the simulation as they used to build the simulation itself.
->
-> Maeve, _WestWorld_
+[![Hippocratic License HL3-CORE](https://img.shields.io/static/v1?label=Hippocratic%20License&message=HL3-CORE&labelColor=5e2751&color=bc8c3d)](https://firstdonoharm.dev/version/3/0/core.html)
 
+Maeve allows developers to easily implement and test AWS Lambda functions. It translates normalized request and response formats into the corresponding event formats required by AWS services, including Application Load Balancers (ALB) and CloudFront Edge functions.
 
-# Reference
+## Features
 
-## Event
+- Provides an easy-to-use translation layer for AWS Lambda events.
+- Supports Application Load Balancer and CloudFront Edge events.
+- Allows for streamlined testing of handlers without complex setup through format conversions (Sublime, Furl).
 
-### from
+## Installation
 
-`from description → event`
+Use pnpm to install the package:
 
-Converts a normalized request to an event.
-
-#### Example
-
-```coffeescript
-import { Event } from "@dashkite/maeve"
-
-event = Event.from
-  request:
-    uri: "/"
-    method: "get"
-    headers: {}
+```bash
+pnpm install @dashkite/maeve
 ```
 
-### dispatch
+## Usage
 
-`dispatch event, handler → promise`
-
-Dispatches an event to a handler, returning a promise. Useful for testing handlers without having to define a callback.
-
-#### Example
+Convert an AWS Lambda event into a normalized request, then process it in your handler.
 
 ```coffeescript
-import { Event } from "@dashkite/maeve"
+import * as ALB from "@dashkite/maeve/alb"
 
 handler = (event, context, callback) ->
-  callback null, Event.Request.from event
-
-event = Event.from
-  request:
-    uri: "/"
-    method: "get"
-    headers: {}
-
-request = await Event.dispatch event, handler
+  request = ALB.getNormalizedRequest event
+  
+  # core handler logic here
+  
+  response = 
+    status: 200
+    description: "200 OK"
+    headers:
+      "content-type": [ "text/html" ]
+    content: "<h1>Hello from Lambda!</h1>"
+  
+  callback null, ALB.getDenormalizedResponse response
 ```
 
-## Event.Request
+## Other Resources
 
-### from
-
-`from request → event-request`
-
-Given a normalized request returns an event request.
-
-`from event → event-request`
-
-Given an event, returns the corresponding event request.
-
-### Event.Response
-
-### from
-
-`from response → event-response`
-
-Given a normalized response returns an event response.
-
-`from event → event-response`
-
-Given an event, returns the corresponding event response.
-
-## Request
-
-### from
-
-`from description → normalized-request`
-
-Creates a normalized request object given a description.
-
-`from event → normalized-request`
-
-Given an event, returns a normalized request.
-
-## Response
-
-### from
-
-`from description → normalized-response`
-
-Creates a normalized response object given a description.
-
-`from event → normalized-response`
-
-Given an event, returns a normalized response.
+- [Recipes](docs/recipes.md)
+- [Reference](docs/reference.md)
+- [Technical Notes](docs/technical-notes.md)
+- [Testing](docs/testing.md)

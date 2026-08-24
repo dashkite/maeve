@@ -51,7 +51,11 @@ getHeaders = ( request ) ->
     .map ([ key, value ]) -> [ key, [ value ]]
     .reduce setEntry, {}
 
-getContent = ( request ) -> request.body
+getContent = ( request ) ->
+  if request.isBase64Encoded
+    convert from: "base64", to: "utf8", request.body
+  else
+    request.body
 
 Request =
 

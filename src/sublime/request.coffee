@@ -16,7 +16,11 @@ Request =
   Headers:
     
     get: ( request, name ) ->
-      request.headers?[ name ]?.join ", "
+      value = request.headers?[ name ]
+      if Array.isArray value
+        value.join ", "
+      else
+        value
 
   from: ( format, request ) ->
     convert type: "request", from: format, to: "sublime", request

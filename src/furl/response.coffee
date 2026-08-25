@@ -13,8 +13,8 @@ setEntry = ( result, [ key, value ]) ->
 getHeaders = ( response ) ->
   Object
     .entries response.headers
-    .map ([ key, values ]) ->
-      [ ( headerCase key ), values[0] ]
+    .map ([ key, value ]) ->
+      [ ( headerCase key ), value ]
     .reduce setEntry, {}
 
 getBody = ( response ) ->

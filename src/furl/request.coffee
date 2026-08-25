@@ -48,7 +48,6 @@ getHeaders = ( request ) ->
     .entries request.headers
     .map ([ key, value ]) ->
       [ ( headerMap[ key ] ? key ), value ]
-    .map ([ key, value ]) -> [ key, [ value ]]
     .reduce setEntry, {}
 
 getContent = ( request ) ->
